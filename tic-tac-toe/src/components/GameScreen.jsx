@@ -4,7 +4,7 @@ import Board from './Board'
 import GameResult from './GameResult'
 import styles from './GameScreen.module.css'
 
-export default function GameScreen({ players, scores, game, roundNumber, onCellClick, onPlayAgain, onRestart }) {
+export default function GameScreen({ players, scores, game, roundNumber, isAIThinking, onCellClick, onPlayAgain, onRestart }) {
   const isGameOver = !!(game.winner || game.isDraw)
 
   return (
@@ -15,6 +15,7 @@ export default function GameScreen({ players, scores, game, roundNumber, onCellC
         currentMark={game.currentMark}
         winner={game.winner}
         isDraw={game.isDraw}
+        isAIThinking={isAIThinking}
       />
       <Board
         board={game.board}

@@ -1,18 +1,42 @@
 import { useState } from 'react'
 import styles from './SetupScreen.module.css'
 
+const DIFFICULTIES = [
+  { key: 'normal', label: '普通', desc: '會犯錯' },
+  { key: 'hard', label: '困難', desc: '偶爾犯錯' },
+  { key: 'impossible', label: '不可能', desc: '完美 AI' },
+]
+
 export default function SetupScreen({ onStart }) {
+  const [mode, setMode] = useState('pvp')
   const [name1, setName1] = useState('')
   const [name2, setName2] = useState('')
+  const [difficulty, setDifficulty] = useState('normal')
 
   function handleSubmit(e) {
     e.preventDefault()
-    onStart(name1.trim(), name2.trim())
+    onStart(name1.trim(), name2.trim(), mode, difficulty)
   }
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>九宮格大戰</h1>
+      <div className={styles.modeTabs}>
+        <button
+          className={`${styles.modeTab} ${mode === 'pvp' ? styles.active : ''}`}
+          onClick={() => setMode('pvp')}
+          type="button"
+        >
+          雙人對戰
+        </button>
+        <button
+          className={`${styles.modeTab} ${mode === 'pve' ? styles.active : ''}`}
+          onClick={() => setMode('pve')}
+          type="button"
+        >
+          單人挑戰
+        </button>
+      </div>
       <form className={styles.card} onSubmit={handleSubmit}>
         <div className={styles.field}>
           <label className={styles.label}>
@@ -26,18 +50,38 @@ export default function SetupScreen({ onStart }) {
             maxLength={20}
           />
         </div>
-        <div className={styles.field}>
-          <label className={styles.label}>
-            <span className={styles.mark} data-mark="O">O</span> 玩家名稱
-          </label>
-          <input
-            className={styles.input}
-            value={name2}
-            onChange={e => setName2(e.target.value)}
-            placeholder="Player 2"
-            maxLength={20}
-          />
-        </div>
+        {mode === 'pvp' && (
+          <div className={styles.field}>
+            <label className={styles.label}>
+              <span className={styles.mark} data-mark="O">O</span> 玩家名稱
+            </label>
+            <input
+              className={styles.input}
+              value={name2}
+              onChange={e => setName2(e.target.value)}
+              placeholder="Player 2"
+              maxLength={20}
+            />
+          </div>
+        )}
+        {mode === 'pve' && (
+          <div className={styles.field}>
+            <label className={styles.label}>難度</label>
+            <div className={styles.difficultyGroup}>
+              {DIFFICULTIES.map(d => (
+                <button
+                  key={d.key}
+                  type="button"
+                  className={`${styles.diffBtn} ${difficulty === d.key ? styles.diffActive : ''}`}
+                  onClick={() => setDifficulty(d.key)}
+                >
+                  <span className={styles.diffLabel}>{d.label}</span>
+                  <span className={styles.diffDesc}>{d.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <button className={styles.startBtn} type="submit">開始遊戲</button>
       </form>
     </div>

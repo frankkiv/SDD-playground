@@ -24,3 +24,14 @@
   font-size: 1.3rem;
   font-weight: 800;
 }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.thinking {
+  color: var(--color-o);
+  font-weight: 700;
+  animation: pulse 1s ease-in-out infinite;
+}

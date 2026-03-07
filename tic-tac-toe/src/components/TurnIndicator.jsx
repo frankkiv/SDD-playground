@@ -1,6 +1,6 @@
 import styles from './TurnIndicator.module.css'
 
-export default function TurnIndicator({ players, currentMark, winner, isDraw }) {
+export default function TurnIndicator({ players, currentMark, winner, isDraw, isAIThinking }) {
   if (winner) {
     const winnerPlayer = players.find(p => p.mark === winner)
     return (
@@ -17,6 +17,14 @@ export default function TurnIndicator({ players, currentMark, winner, isDraw }) 
     return (
       <div className={styles.indicator}>
         <span className={styles.result}>平局！</span>
+      </div>
+    )
+  }
+
+  if (isAIThinking) {
+    return (
+      <div className={styles.indicator}>
+        <span className={styles.thinking}>電腦思考中...</span>
       </div>
     )
   }
