@@ -1,0 +1,26 @@
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-height: 2rem;
+}
+
+.mark {
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.x { color: var(--color-x); }
+.o { color: var(--color-o); }
+
+.playerName {
+  color: var(--color-text);
+}
+
+.result {
+  font-size: 1.3rem;
+  font-weight: 800;
+}

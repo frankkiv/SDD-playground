@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl -e bash -ic \"cd ~/AI/tic-tac-toe && npm run build 2>&1 | tail -10\")",
+      "Read(//mnt/c/Users/**)",
+      "Read(//c/Users/User/**)"
+    ]
+  }
+}

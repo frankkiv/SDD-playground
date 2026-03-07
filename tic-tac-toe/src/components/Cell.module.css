@@ -1,0 +1,45 @@
+@keyframes popIn {
+  0%   { transform: scale(0.3); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: var(--color-surface);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+.cell:hover:not(:disabled) {
+  background: var(--color-secondary);
+  transform: scale(1.04);
+}
+.cell:disabled {
+  cursor: default;
+}
+
+.mark {
+  font-size: 3rem;
+  font-weight: 900;
+  display: block;
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.x .mark { color: var(--color-x); }
+.o .mark { color: var(--color-o); }
+
+.winning {
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 20px rgba(255,255,255,0.15);
+}
+
+.dimmed {
+  opacity: 0.35;
+}

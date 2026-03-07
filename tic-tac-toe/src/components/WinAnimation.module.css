@@ -1,0 +1,19 @@
+@keyframes drawLine {
+  from { stroke-dashoffset: var(--line-length); }
+  to   { stroke-dashoffset: 0; }
+}
+
+.svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.line {
+  stroke: #fff;
+  stroke-dasharray: var(--line-length);
+  stroke-dashoffset: var(--line-length);
+  animation: drawLine 0.35s ease-out forwards;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8));
+}
