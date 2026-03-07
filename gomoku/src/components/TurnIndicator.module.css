@@ -1,0 +1,29 @@
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-height: 2rem;
+}
+
+.stone {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #666;
+  vertical-align: middle;
+}
+.stone[data-color="B"] { background: var(--color-black-stone); }
+.stone[data-color="W"] { background: var(--color-white-stone); }
+
+.playerName {
+  color: var(--color-text);
+}
+
+.result {
+  font-size: 1.3rem;
+  font-weight: 800;
+}

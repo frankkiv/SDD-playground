@@ -1,0 +1,89 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.overlay {
+  display: flex;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  min-width: 300px;
+}
+
+.message {
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stone {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #666;
+}
+.stone[data-color="B"] { background: var(--color-black-stone); }
+.stone[data-color="W"] { background: var(--color-white-stone); }
+
+.nextInfo {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.playAgain {
+  background: linear-gradient(135deg, var(--color-primary), #ff6b6b);
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(233,69,96,0.4);
+}
+.playAgain:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233,69,96,0.6);
+}
+.playAgain:active {
+  transform: translateY(0);
+}
+
+.restart {
+  background: transparent;
+  border: 2px solid var(--color-secondary);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.restart:hover {
+  border-color: var(--color-muted);
+  background: rgba(255,255,255,0.05);
+}

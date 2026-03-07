@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.svg {
+  width: min(80vw, 80vh, 600px);
+  height: auto;
+  cursor: pointer;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.winning {
+  filter: drop-shadow(0 0 6px rgba(233,69,96,0.9));
+}
+
+.dimmed {
+  opacity: 0.35;
+}
