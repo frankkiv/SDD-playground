@@ -44,13 +44,16 @@ jobs:
 
       - name: Generate landing page
         run: |
-          CARDS=""
-          for proj in _site/*/; do
-            name="$(basename "$proj")"
-            display_name="$(echo "$name" | sed 's/-/ /g')"
-            CARDS="$CARDS    <a class=\"project-card\" href=\"$name/\">\n      <div class=\"name\">$display_name</div>\n    </a>\n"
-          done
-          sed "s|<!-- PROJECTS -->|$(echo -e "$CARDS")|" index.html > _site/index.html
+          python3 -c "
+          import os, html as h
+          cards = ''
+          for name in sorted(os.listdir('_site')):
+              if os.path.isdir(os.path.join('_site', name)):
+                  display = name.replace('-', ' ')
+                  cards += f'    <a class=\"project-card\" href=\"{name}/\"><div class=\"name\">{display}</div></a>\n'
+          template = open('index.html').read()
+          open('_site/index.html', 'w').write(template.replace('<!-- PROJECTS -->', cards))
+          "
 
       - uses: actions/configure-pages@v5
 
