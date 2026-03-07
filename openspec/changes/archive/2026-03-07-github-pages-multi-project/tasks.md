@@ -18,7 +18,7 @@
 
 ## 4. GitHub Repo 設定
 
-- [ ] 4.1 到 GitHub repo Settings 啟用 Pages，source 選 GitHub Actions
-- [ ] 4.2 Push 變更到 `main`，觸發 workflow
-- [ ] 4.3 驗證 `frankkiv.github.io/SDD-playground/` 顯示首頁
-- [ ] 4.4 驗證 `frankkiv.github.io/SDD-playground/tic-tac-toe/` 可正常遊玩
+- [x] 4.1 到 GitHub repo Settings 啟用 Pages，source 選 GitHub Actions
+- [x] 4.2 Push 變更到 `main`，觸發 workflow
+- [x] 4.3 驗證 `frankkiv.github.io/SDD-playground/` 顯示首頁
+- [x] 4.4 驗證 `frankkiv.github.io/SDD-playground/tic-tac-toe/` 可正常遊玩

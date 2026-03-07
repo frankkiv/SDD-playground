@@ -67,7 +67,7 @@
 
 - [x] 11.1 Wire all components together in `App` / `GameScreen`
 - [x] 11.2 Apply global base styles: font, background color, color palette variables
-- [ ] 11.3 Verify alternating first-turn works correctly across multiple rounds
-- [ ] 11.4 Verify scores accumulate and reset correctly
-- [ ] 11.5 Test all 8 win directions and the draw condition manually
-- [ ] 11.6 Check layout is usable on common desktop screen sizes
+- [x] 11.3 Verify alternating first-turn works correctly across multiple rounds
+- [x] 11.4 Verify scores accumulate and reset correctly
+- [x] 11.5 Test all 8 win directions and the draw condition manually
+- [x] 11.6 Check layout is usable on common desktop screen sizes
