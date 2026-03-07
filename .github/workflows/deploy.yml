@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build all sub-projects
+        run: |
+          mkdir -p _site
+          for dir in */; do
+            dir_name="${dir%/}"
+            if [ -f "$dir_name/package.json" ] && grep -q '"build"' "$dir_name/package.json"; then
+              echo "::group::Building $dir_name"
+              cd "$dir_name"
+              npm ci
+              npm run build
+              cd ..
+              cp -r "$dir_name/dist" "_site/$dir_name"
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Generate landing page
+        run: |
+          CARDS=""
+          for proj in _site/*/; do
+            name="$(basename "$proj")"
+            display_name="$(echo "$name" | sed 's/-/ /g')"
+            CARDS="$CARDS    <a class=\"project-card\" href=\"$name/\">\n      <div class=\"name\">$display_name</div>\n    </a>\n"
+          done
+          sed "s|<!-- PROJECTS -->|$(echo -e "$CARDS")|" index.html > _site/index.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDD Playground</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1a2e;
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e94560, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #888;
+      font-size: 1rem;
+      margin-bottom: 3rem;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      max-width: 800px;
+      width: 100%;
+    }
+    .project-card {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: #f5f5f5;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .project-card .name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #4ecdc4;
+    }
+    .project-card .desc {
+      font-size: 0.85rem;
+      color: #888;
+    }
+    footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>SDD Playground</h1>
+  <p class="subtitle">Spec-Driven Development daily projects</p>
+  <div class="projects">
+    <!-- PROJECTS -->
+  </div>
+  <footer>Built with SDD workflow</footer>
+</body>
+</html>
