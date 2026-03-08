@@ -36,10 +36,14 @@ export default function WhiteboardCanvas({
 
   const handlePointerDown = useCallback((e) => {
     if (e.button !== 0) return
-    const canvas = dynamicRef.current
-    canvas.setPointerCapture(e.pointerId)
-    const pt = screenToCanvas(e.clientX, e.clientY)
 
+    // If currently editing text, confirm it first and don't start a new action
+    if (isTextEditing) {
+      onTextConfirm()
+      return
+    }
+
+    const pt = screenToCanvas(e.clientX, e.clientY)
     const activeTool = spaceDownRef.current ? 'pan' : tool
 
     if (activeTool === 'pan') {
@@ -52,6 +56,10 @@ export default function WhiteboardCanvas({
       onTextStart(pt.x, pt.y)
       return
     }
+
+    // Only capture pointer for drawing tools (not text/pan)
+    const canvas = dynamicRef.current
+    canvas.setPointerCapture(e.pointerId)
 
     if (activeTool === 'eraser') {
       // Erase on down
@@ -89,7 +97,7 @@ export default function WhiteboardCanvas({
       }
       return
     }
-  }, [tool, color, lineWidth, activeLayerId, objects, onRemoveObjects, onTextStart, screenToCanvas])
+  }, [tool, color, lineWidth, activeLayerId, objects, onRemoveObjects, onTextStart, onTextConfirm, isTextEditing, screenToCanvas])
 
   const handlePointerMove = useCallback((e) => {
     const d = drawingRef.current
@@ -315,6 +323,7 @@ export default function WhiteboardCanvas({
             onChange={e => onTextChange(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') onTextConfirm() }}
             onBlur={onTextConfirm}
+            onPointerDown={e => e.stopPropagation()}
             autoFocus
           />
         )}
