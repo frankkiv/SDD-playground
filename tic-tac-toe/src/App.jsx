@@ -5,7 +5,7 @@ import GameScreen from './components/GameScreen'
 import OnlineLobby from './components/OnlineLobby'
 
 const INITIAL_SCORES = { X: 0, O: 0, draws: 0 }
-const AI_MARK = 'O'
+const AI_MARK = 'X'
 
 function makeInitialGame(firstMark) {
   return {
@@ -39,7 +39,7 @@ export default function App() {
 
   function handleStart(name1, name2, mode, diff) {
     const p = mode === 'pve'
-      ? [{ name: name1 || 'Player 1', mark: 'X' }, { name: '電腦', mark: 'O' }]
+      ? [{ name: name1 || 'Player 1', mark: 'O' }, { name: '電腦', mark: 'X' }]
       : [{ name: name1 || 'Player 1', mark: 'X' }, { name: name2 || 'Player 2', mark: 'O' }]
     setPlayers(p)
     setGameMode(mode)
