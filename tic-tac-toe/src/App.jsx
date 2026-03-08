@@ -20,8 +20,8 @@ function makeInitialGame(firstMark) {
 export default function App() {
   const [screen, setScreen] = useState('setup')
   const [players, setPlayers] = useState([
-    { name: 'Player 1', mark: 'X' },
-    { name: 'Player 2', mark: 'O' },
+    { name: '玩家 1', mark: 'X' },
+    { name: '玩家 2', mark: 'O' },
   ])
   const [scores, setScores] = useState(INITIAL_SCORES)
   const [roundNumber, setRoundNumber] = useState(0)
@@ -39,8 +39,8 @@ export default function App() {
 
   function handleStart(name1, name2, mode, diff) {
     const p = mode === 'pve'
-      ? [{ name: name1 || 'Player 1', mark: 'O' }, { name: '電腦', mark: 'X' }]
-      : [{ name: name1 || 'Player 1', mark: 'X' }, { name: name2 || 'Player 2', mark: 'O' }]
+      ? [{ name: name1 || '玩家 1', mark: 'O' }, { name: '電腦', mark: 'X' }]
+      : [{ name: name1 || '玩家 1', mark: 'X' }, { name: name2 || '玩家 2', mark: 'O' }]
     setPlayers(p)
     setGameMode(mode)
     setDifficulty(diff || 'normal')

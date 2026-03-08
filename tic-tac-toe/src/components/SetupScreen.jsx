@@ -58,7 +58,7 @@ export default function SetupScreen({ onStart, onOnline }) {
               className={styles.input}
               value={mode === 'pve' ? name1 : name2}
               onChange={e => mode === 'pve' ? setName1(e.target.value) : setName2(e.target.value)}
-              placeholder={mode === 'pve' ? 'Player 1' : 'Player 2'}
+              placeholder={mode === 'pve' ? '玩家 1' : '玩家 2'}
               maxLength={20}
             />
           </div>
@@ -72,7 +72,7 @@ export default function SetupScreen({ onStart, onOnline }) {
               className={styles.input}
               value={name1}
               onChange={e => setName1(e.target.value)}
-              placeholder="Player 1"
+              placeholder="玩家 1"
               maxLength={20}
             />
           </div>

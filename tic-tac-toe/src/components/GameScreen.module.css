@@ -5,6 +5,21 @@
   gap: 1.5rem;
 }
 
+.backBtn {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: color 0.2s;
+}
+.backBtn:hover {
+  color: var(--color-text);
+}
+
 .disconnectBanner {
   display: flex;
   align-items: center;

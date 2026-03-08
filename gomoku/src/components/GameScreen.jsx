@@ -9,6 +9,7 @@ export default function GameScreen({ players, scores, game, roundNumber, isAIThi
 
   return (
     <div className={styles.container}>
+      <button className={styles.backBtn} onClick={onRestart}>返回大廳</button>
       <Scoreboard players={players} scores={scores} />
       <TurnIndicator
         players={players}
