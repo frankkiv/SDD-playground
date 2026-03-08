@@ -45,11 +45,15 @@ jobs:
       - name: Generate landing page
         run: |
           python3 -c "
-          import os, html as h
+          import os
+          name_map = {
+              'tic-tac-toe': '九宮格大戰',
+              'gomoku': '五子棋',
+          }
           cards = ''
           for name in sorted(os.listdir('_site')):
               if os.path.isdir(os.path.join('_site', name)):
-                  display = name.replace('-', ' ')
+                  display = name_map.get(name, name.replace('-', ' '))
                   cards += f'    <a class=\"project-card\" href=\"{name}/\"><div class=\"name\">{display}</div></a>\n'
           template = open('index.html').read()
           open('_site/index.html', 'w').write(template.replace('<!-- PROJECTS -->', cards))

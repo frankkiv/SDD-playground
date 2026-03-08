@@ -24,6 +24,7 @@ export default function SetupScreen({ onStart, onOnline }) {
 
   return (
     <div className={styles.container}>
+      <a className={styles.homeLink} href="/SDD-playground/">← 返回首頁</a>
       <h1 className={styles.title}>九宮格大戰</h1>
       <div className={styles.modeTabs}>
         <button
