@@ -41,6 +41,7 @@ export default function App() {
   const [isTextEditing, setIsTextEditing] = useState(false)
   const [textPos, setTextPos] = useState({ x: 0, y: 0 })
   const [textValue, setTextValue] = useState('')
+  const textConfirmedRef = useRef(false)
 
   // Author ID for online undo scoping
   const authorRef = useRef('local')
@@ -339,9 +340,12 @@ export default function App() {
     setTextPos({ x, y })
     setTextValue('')
     setIsTextEditing(true)
+    textConfirmedRef.current = false
   }, [])
 
   const handleTextConfirm = useCallback(() => {
+    if (textConfirmedRef.current) return
+    textConfirmedRef.current = true
     if (textValue.trim()) {
       addObject({
         id: genId(),

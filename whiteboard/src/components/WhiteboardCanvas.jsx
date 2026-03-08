@@ -16,9 +16,11 @@ export default function WhiteboardCanvas({
   const staticRef = useRef(null)
   const dynamicRef = useRef(null)
   const containerRef = useRef(null)
-  const drawingRef = useRef(null) // current stroke/shape being drawn
+  const drawingRef = useRef(null)
   const lastPanRef = useRef(null)
   const spaceDownRef = useRef(false)
+  const textInputRef = useRef(null)
+  const textReadyRef = useRef(false) // guard against premature blur
 
   // Redraw static layer when objects/layers change
   useEffect(() => {
@@ -26,6 +28,20 @@ export default function WhiteboardCanvas({
     if (ctx) renderAll(ctx, objects, layers, CANVAS_W, CANVAS_H)
   }, [objects, layers])
 
+  // Focus the text input when it appears, with a delay to prevent blur race
+  useEffect(() => {
+    if (isTextEditing && textInputRef.current) {
+      textReadyRef.current = false
+      // Delay focus to avoid pointerup stealing it
+      const timer = setTimeout(() => {
+        textInputRef.current?.focus()
+        textReadyRef.current = true
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isTextEditing])
+
+  // Convert screen coordinates to canvas coordinates
   const screenToCanvas = useCallback((sx, sy) => {
     const rect = containerRef.current.getBoundingClientRect()
     return {
@@ -34,12 +50,19 @@ export default function WhiteboardCanvas({
     }
   }, [viewport])
 
+  // Convert canvas coordinates to container-relative coordinates (for positioning overlays)
+  const canvasToContainer = useCallback((cx, cy) => {
+    return {
+      x: cx * viewport.scale + viewport.x,
+      y: cy * viewport.scale + viewport.y,
+    }
+  }, [viewport])
+
   const handlePointerDown = useCallback((e) => {
     if (e.button !== 0) return
 
-    // If currently editing text, confirm it first and don't start a new action
     if (isTextEditing) {
-      onTextConfirm()
+      // Let the blur handler take care of confirming — just block the click
       return
     }
 
@@ -57,12 +80,11 @@ export default function WhiteboardCanvas({
       return
     }
 
-    // Only capture pointer for drawing tools (not text/pan)
+    // Only capture pointer for drawing tools
     const canvas = dynamicRef.current
     canvas.setPointerCapture(e.pointerId)
 
     if (activeTool === 'eraser') {
-      // Erase on down
       const radius = lineWidth * 2
       const toRemove = objects.filter(o =>
         o.layerId === activeLayerId && hitTest(o, pt.x, pt.y, radius)
@@ -97,7 +119,7 @@ export default function WhiteboardCanvas({
       }
       return
     }
-  }, [tool, color, lineWidth, activeLayerId, objects, onRemoveObjects, onTextStart, onTextConfirm, isTextEditing, screenToCanvas])
+  }, [tool, color, lineWidth, activeLayerId, objects, onRemoveObjects, onTextStart, isTextEditing, screenToCanvas])
 
   const handlePointerMove = useCallback((e) => {
     const d = drawingRef.current
@@ -128,7 +150,6 @@ export default function WhiteboardCanvas({
 
     if (d.tool === 'pen' || d.tool === 'highlighter') {
       d.points.push(pt)
-      // Draw on dynamic canvas
       const ctx = dynamicRef.current.getContext('2d')
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
       renderObject(ctx, { ...d, type: d.type })
@@ -292,6 +313,16 @@ export default function WhiteboardCanvas({
     }
   })()
 
+  // Calculate text input position relative to container
+  const textScreenPos = isTextEditing ? canvasToContainer(textPos.x, textPos.y) : null
+
+  function handleTextBlur() {
+    // Only confirm if the input was ready (prevents premature blur)
+    if (textReadyRef.current) {
+      onTextConfirm()
+    }
+  }
+
   return (
     <div ref={containerRef} className={styles.container} style={{ cursor: cursorStyle }}>
       <div
@@ -310,24 +341,25 @@ export default function WhiteboardCanvas({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
         />
-        {isTextEditing && (
-          <input
-            className={styles.textInput}
-            style={{
-              left: textPos.x,
-              top: textPos.y,
-              fontSize: fontSize,
-              color,
-            }}
-            value={textValue}
-            onChange={e => onTextChange(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') onTextConfirm() }}
-            onBlur={onTextConfirm}
-            onPointerDown={e => e.stopPropagation()}
-            autoFocus
-          />
-        )}
       </div>
+
+      {isTextEditing && textScreenPos && (
+        <input
+          ref={textInputRef}
+          className={styles.textInput}
+          style={{
+            left: textScreenPos.x,
+            top: textScreenPos.y,
+            fontSize: fontSize * viewport.scale,
+            color,
+          }}
+          value={textValue}
+          onChange={e => onTextChange(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) onTextConfirm() }}
+          onBlur={handleTextBlur}
+          onPointerDown={e => e.stopPropagation()}
+        />
+      )}
     </div>
   )
 }
