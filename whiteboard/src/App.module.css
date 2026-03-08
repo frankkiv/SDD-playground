@@ -47,3 +47,20 @@
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(233,69,96,0.4);
 }
+
+.connectedBadge {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(78,205,196,0.15);
+  border: 1px solid rgba(78,205,196,0.3);
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+}

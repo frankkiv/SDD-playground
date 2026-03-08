@@ -151,6 +151,9 @@
   background: var(--color-secondary);
   color: var(--color-text);
 }
+.actionBtn.online {
+  color: var(--color-accent);
+}
 
 .zoomBtn {
   background: rgba(255,255,255,0.06);

@@ -1,18 +1,22 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import SetupScreen from './components/SetupScreen'
-import OnlineLobby from './components/OnlineLobby'
 import WhiteboardCanvas from './components/WhiteboardCanvas'
 import Toolbar from './components/Toolbar'
 import LayerPanel from './components/LayerPanel'
+import SharePanel from './components/SharePanel'
 import { createInitialState, createLayer, genId, serializeState, deserializeState } from './whiteboardState'
 import { renderAll } from './renderer'
+import { createPeerConnection } from './peerConnection'
 import styles from './App.module.css'
 
 export default function App() {
-  const [screen, setScreen] = useState('setup') // setup | lobby | whiteboard
+  const [screen, setScreen] = useState('setup') // setup | whiteboard
   const [isOnline, setIsOnline] = useState(false)
   const peerRef = useRef(null)
   const [peerDisconnected, setPeerDisconnected] = useState(false)
+  const [showSharePanel, setShowSharePanel] = useState(false)
+  const [roomCode, setRoomCode] = useState('')
+  const [shareStatus, setShareStatus] = useState('idle') // idle | waiting | connected
 
   // Whiteboard state
   const [wbState, setWbState] = useState(createInitialState)
@@ -50,6 +54,116 @@ export default function App() {
   const sendToPeer = useCallback((data) => {
     peerRef.current?.sendData(data)
   }, [])
+
+  // Handle peer data
+  const handlePeerData = useCallback((data) => {
+    if (data.type === 'add-object') {
+      setWbState(prev => ({ ...prev, objects: [...prev.objects, data.obj] }))
+    } else if (data.type === 'remove-objects') {
+      const ids = new Set(data.ids)
+      setWbState(prev => ({ ...prev, objects: prev.objects.filter(o => !ids.has(o.id)) }))
+    } else if (data.type === 'clear') {
+      setWbState(prev => ({ ...prev, objects: [] }))
+    } else if (data.type === 'snapshot') {
+      const newState = deserializeState(data.state)
+      setWbState(newState)
+    } else if (data.type === 'layer-add') {
+      setWbState(prev => {
+        const newLayers = [...prev.layers]
+        newLayers.splice(data.afterIdx + 1, 0, data.layer)
+        return { ...prev, layers: newLayers }
+      })
+    } else if (data.type === 'layer-remove') {
+      setWbState(prev => ({
+        ...prev,
+        layers: prev.layers.filter(l => l.id !== data.layerId),
+        objects: prev.objects.filter(o => o.layerId !== data.layerId),
+      }))
+    } else if (data.type === 'layer-toggle') {
+      setWbState(prev => ({
+        ...prev,
+        layers: prev.layers.map(l => l.id === data.layerId ? { ...l, visible: !l.visible } : l)
+      }))
+    } else if (data.type === 'layer-reorder') {
+      setWbState(prev => {
+        const map = new Map(prev.layers.map(l => [l.id, l]))
+        return { ...prev, layers: data.order.map(id => map.get(id)).filter(Boolean) }
+      })
+    }
+  }, [])
+
+  // Setup peer connection (shared between host and guest)
+  function setupPeer(pc, role) {
+    peerRef.current = pc
+    setIsOnline(true)
+    authorRef.current = role
+    setPeerDisconnected(false)
+
+    pc.on('onData', handlePeerData)
+    pc.on('onDisconnect', () => setPeerDisconnected(true))
+  }
+
+  // Share: create room from within the whiteboard
+  const handleShare = useCallback(async () => {
+    if (peerRef.current) return // already connected
+    setShareStatus('waiting')
+    setShowSharePanel(true)
+
+    const pc = createPeerConnection()
+    peerRef.current = pc
+    authorRef.current = 'host'
+
+    pc.on('onData', handlePeerData)
+    pc.on('onDisconnect', () => {
+      setPeerDisconnected(true)
+      setShareStatus('idle')
+    })
+
+    pc.on('onConnect', () => {
+      setIsOnline(true)
+      setShareStatus('connected')
+      setPeerDisconnected(false)
+      // Send snapshot to guest
+      pc.sendData({ type: 'snapshot', state: serializeState(wbStateRef.current) })
+    })
+
+    try {
+      const code = await pc.createRoom()
+      setRoomCode(code)
+    } catch {
+      setShareStatus('idle')
+      peerRef.current = null
+      pc.destroy()
+    }
+  }, [handlePeerData])
+
+  // Cancel sharing
+  const handleCancelShare = useCallback(() => {
+    if (shareStatus === 'waiting') {
+      peerRef.current?.destroy()
+      peerRef.current = null
+      setShareStatus('idle')
+      setRoomCode('')
+      setIsOnline(false)
+    }
+    setShowSharePanel(false)
+  }, [shareStatus])
+
+  // Join from setup screen
+  const handleJoin = useCallback(async (code) => {
+    const pc = createPeerConnection()
+
+    pc.on('onData', handlePeerData)
+    pc.on('onDisconnect', () => setPeerDisconnected(true))
+
+    await pc.joinRoom(code)
+    peerRef.current = pc
+    setIsOnline(true)
+    authorRef.current = 'guest'
+    setPeerDisconnected(false)
+    setShareStatus('connected')
+    setScreen('whiteboard')
+  }, [handlePeerData])
 
   // Add object with undo support
   const addObject = useCallback((obj) => {
@@ -260,72 +374,14 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [handleUndo, handleRedo, isTextEditing])
 
-  // Handle peer data
-  const handlePeerData = useCallback((data) => {
-    if (data.type === 'add-object') {
-      setWbState(prev => ({ ...prev, objects: [...prev.objects, data.obj] }))
-    } else if (data.type === 'remove-objects') {
-      const ids = new Set(data.ids)
-      setWbState(prev => ({ ...prev, objects: prev.objects.filter(o => !ids.has(o.id)) }))
-    } else if (data.type === 'clear') {
-      setWbState(prev => ({ ...prev, objects: [] }))
-    } else if (data.type === 'snapshot') {
-      const newState = deserializeState(data.state)
-      setWbState(newState)
-    } else if (data.type === 'layer-add') {
-      setWbState(prev => {
-        const newLayers = [...prev.layers]
-        newLayers.splice(data.afterIdx + 1, 0, data.layer)
-        return { ...prev, layers: newLayers }
-      })
-    } else if (data.type === 'layer-remove') {
-      setWbState(prev => ({
-        ...prev,
-        layers: prev.layers.filter(l => l.id !== data.layerId),
-        objects: prev.objects.filter(o => o.layerId !== data.layerId),
-      }))
-    } else if (data.type === 'layer-toggle') {
-      setWbState(prev => ({
-        ...prev,
-        layers: prev.layers.map(l => l.id === data.layerId ? { ...l, visible: !l.visible } : l)
-      }))
-    } else if (data.type === 'layer-reorder') {
-      setWbState(prev => {
-        const map = new Map(prev.layers.map(l => [l.id, l]))
-        return { ...prev, layers: data.order.map(id => map.get(id)).filter(Boolean) }
-      })
-    }
-  }, [])
-
-  // Connection handlers
-  function handleConnected(pc, role) {
-    peerRef.current = pc
-    setIsOnline(true)
-    authorRef.current = role
-    setPeerDisconnected(false)
-
-    pc.on('onData', handlePeerData)
-    pc.on('onDisconnect', () => setPeerDisconnected(true))
-
-    // Host sends snapshot to guest
-    if (role === 'host') {
-      pc.on('onConnect', () => {
-        // Re-register data handler after connection established
-      })
-      // Send current state as snapshot after a short delay for connection to stabilize
-      setTimeout(() => {
-        pc.sendData({ type: 'snapshot', state: serializeState(wbStateRef.current) })
-      }, 500)
-    }
-
-    setScreen('whiteboard')
-  }
-
   function handleBackToSetup() {
     peerRef.current?.destroy()
     peerRef.current = null
     setIsOnline(false)
     setPeerDisconnected(false)
+    setShareStatus('idle')
+    setRoomCode('')
+    setShowSharePanel(false)
     setWbState(createInitialState())
     undoStackRef.current = []
     redoStackRef.current = []
@@ -341,17 +397,8 @@ export default function App() {
   if (screen === 'setup') {
     return (
       <SetupScreen
-        onLocal={() => setScreen('whiteboard')}
-        onOnline={() => setScreen('lobby')}
-      />
-    )
-  }
-
-  if (screen === 'lobby') {
-    return (
-      <OnlineLobby
-        onConnected={handleConnected}
-        onBack={() => setScreen('setup')}
+        onStart={() => setScreen('whiteboard')}
+        onJoin={handleJoin}
       />
     )
   }
@@ -366,6 +413,12 @@ export default function App() {
       {peerDisconnected && (
         <div className={styles.disconnectBanner}>
           對方已離線
+        </div>
+      )}
+
+      {isOnline && !peerDisconnected && shareStatus === 'connected' && (
+        <div className={styles.connectedBadge}>
+          已連線
         </div>
       )}
 
@@ -406,6 +459,12 @@ export default function App() {
         onLoad={handleLoad}
         onToggleLayers={() => setShowLayerPanel(p => !p)}
         showLayerPanel={showLayerPanel}
+        onToggleShare={() => {
+          if (!peerRef.current) handleShare()
+          else setShowSharePanel(p => !p)
+        }}
+        isOnline={isOnline}
+        shareStatus={shareStatus}
         canUndo={canUndo}
         canRedo={canRedo}
         zoom={viewport.scale}
@@ -421,6 +480,14 @@ export default function App() {
           onRemove={handleRemoveLayer}
           onToggleVisible={handleToggleLayerVisible}
           onReorder={handleReorderLayers}
+        />
+      )}
+
+      {showSharePanel && (
+        <SharePanel
+          roomCode={roomCode}
+          status={shareStatus}
+          onClose={handleCancelShare}
         />
       )}
     </div>

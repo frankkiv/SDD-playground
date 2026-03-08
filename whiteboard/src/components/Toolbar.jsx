@@ -23,6 +23,7 @@ export default function Toolbar({
   onToolChange, onColorChange, onLineWidthChange, onFontSizeChange,
   onUndo, onRedo, onClear, onExport, onSave, onLoad,
   onToggleLayers, showLayerPanel,
+  onToggleShare, isOnline, shareStatus,
   canUndo, canRedo,
   zoom, onResetZoom,
 }) {
@@ -120,6 +121,18 @@ export default function Toolbar({
           title="圖層"
         >
           ☰
+        </button>
+      </div>
+
+      <div className={styles.divider} />
+
+      <div className={styles.section}>
+        <button
+          className={`${styles.actionBtn} ${isOnline ? styles.online : ''}`}
+          onClick={onToggleShare}
+          title={isOnline ? '連線中' : '分享白板'}
+        >
+          {shareStatus === 'waiting' ? '⏳' : isOnline ? '🔗' : '📡'}
         </button>
       </div>
 

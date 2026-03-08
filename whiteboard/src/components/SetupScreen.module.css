@@ -82,28 +82,57 @@
 
 .divider {
   color: var(--color-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
-.secondaryBtn {
+.joinForm {
+  display: flex;
+  gap: 0.5rem;
   width: 100%;
-  background: transparent;
+}
+
+.input {
+  flex: 1;
+  background: var(--color-bg);
   border: 2px solid var(--color-secondary);
-  border-radius: 10px;
-  padding: 0.8rem;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-family: monospace;
+  letter-spacing: 0.15em;
+  text-align: center;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.input:focus {
+  border-color: var(--color-primary);
+}
+.input:disabled {
+  opacity: 0.5;
+}
+
+.joinBtn {
+  background: var(--color-secondary);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
   color: var(--color-text);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: background 0.2s;
 }
-.secondaryBtn:hover {
-  border-color: var(--color-accent);
-  background: rgba(78,205,196,0.08);
+.joinBtn:hover:not(:disabled) {
+  background: var(--color-muted);
+}
+.joinBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.hint {
-  color: var(--color-muted);
-  font-size: 0.85rem;
+.error {
+  color: var(--color-primary);
+  font-size: 0.9rem;
 }
