@@ -7,7 +7,7 @@ const DIFFICULTIES = [
   { key: 'impossible', label: '不可能', desc: '完美 AI' },
 ]
 
-export default function SetupScreen({ onStart }) {
+export default function SetupScreen({ onStart, onOnline }) {
   const [mode, setMode] = useState('pvp')
   const [name1, setName1] = useState('')
   const [name2, setName2] = useState('')
@@ -15,6 +15,10 @@ export default function SetupScreen({ onStart }) {
 
   function handleSubmit(e) {
     e.preventDefault()
+    if (mode === 'online') {
+      onOnline()
+      return
+    }
     onStart(name1.trim(), name2.trim(), mode, difficulty)
   }
 
@@ -36,20 +40,29 @@ export default function SetupScreen({ onStart }) {
         >
           單人挑戰
         </button>
+        <button
+          className={`${styles.modeTab} ${mode === 'online' ? styles.active : ''}`}
+          onClick={() => setMode('online')}
+          type="button"
+        >
+          線上對戰
+        </button>
       </div>
       <form className={styles.card} onSubmit={handleSubmit}>
-        <div className={styles.field}>
-          <label className={styles.label}>
-            <span className={styles.mark} data-mark="X">X</span> 玩家名稱
-          </label>
-          <input
-            className={styles.input}
-            value={name1}
-            onChange={e => setName1(e.target.value)}
-            placeholder="Player 1"
-            maxLength={20}
-          />
-        </div>
+        {mode !== 'online' && (
+          <div className={styles.field}>
+            <label className={styles.label}>
+              <span className={styles.mark} data-mark="X">X</span> 玩家名稱
+            </label>
+            <input
+              className={styles.input}
+              value={name1}
+              onChange={e => setName1(e.target.value)}
+              placeholder="Player 1"
+              maxLength={20}
+            />
+          </div>
+        )}
         {mode === 'pvp' && (
           <div className={styles.field}>
             <label className={styles.label}>
@@ -82,7 +95,14 @@ export default function SetupScreen({ onStart }) {
             </div>
           </div>
         )}
-        <button className={styles.startBtn} type="submit">開始遊戲</button>
+        {mode === 'online' && (
+          <div className={styles.onlineInfo}>
+            與朋友連線對戰，一人建立房間、一人加入
+          </div>
+        )}
+        <button className={styles.startBtn} type="submit">
+          {mode === 'online' ? '進入大廳' : '開始遊戲'}
+        </button>
       </form>
     </div>
   )

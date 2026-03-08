@@ -126,6 +126,13 @@
   font-size: 0.7rem;
 }
 
+.onlineInfo {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 .startBtn {
   margin-top: 0.5rem;
   background: linear-gradient(135deg, var(--color-primary), #ff6b6b);
