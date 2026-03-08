@@ -1,6 +1,6 @@
 import styles from './GameResult.module.css'
 
-export default function GameResult({ players, winner, isDraw, roundNumber, onPlayAgain, onRestart }) {
+export default function GameResult({ players, winner, isDraw, roundNumber, onPlayAgain, onRestart, waitingRestart, isOnline }) {
   const nextFirstColor = (roundNumber + 1) % 2 === 0 ? 'B' : 'W'
   const nextFirst = players.find(p => p.color === nextFirstColor)
 
@@ -21,12 +21,18 @@ export default function GameResult({ players, winner, isDraw, roundNumber, onPla
     <div className={styles.overlay}>
       <div className={styles.card}>
         <div className={styles.message}>{message}</div>
-        <div className={styles.nextInfo}>
-          下一局由 <strong>{nextFirst.name}</strong> 先手
-        </div>
+        {!isOnline && (
+          <div className={styles.nextInfo}>
+            下一局由 <strong>{nextFirst.name}</strong> 先手
+          </div>
+        )}
         <div className={styles.actions}>
-          <button className={styles.playAgain} onClick={onPlayAgain}>再來一局</button>
-          <button className={styles.restart} onClick={onRestart}>重新開始</button>
+          <button className={styles.playAgain} onClick={onPlayAgain} disabled={waitingRestart}>
+            {waitingRestart ? '等待對手同意...' : '再來一局'}
+          </button>
+          <button className={styles.restart} onClick={onRestart}>
+            {isOnline ? '離開' : '重新開始'}
+          </button>
         </div>
       </div>
     </div>

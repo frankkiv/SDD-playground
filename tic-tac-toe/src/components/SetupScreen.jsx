@@ -49,20 +49,6 @@ export default function SetupScreen({ onStart, onOnline }) {
         </button>
       </div>
       <form className={styles.card} onSubmit={handleSubmit}>
-        {mode !== 'online' && (
-          <div className={styles.field}>
-            <label className={styles.label}>
-              <span className={styles.mark} data-mark="X">X</span> 玩家名稱
-            </label>
-            <input
-              className={styles.input}
-              value={name1}
-              onChange={e => setName1(e.target.value)}
-              placeholder="Player 1"
-              maxLength={20}
-            />
-          </div>
-        )}
         {mode === 'pvp' && (
           <div className={styles.field}>
             <label className={styles.label}>
@@ -73,6 +59,20 @@ export default function SetupScreen({ onStart, onOnline }) {
               value={name2}
               onChange={e => setName2(e.target.value)}
               placeholder="Player 2"
+              maxLength={20}
+            />
+          </div>
+        )}
+        {mode !== 'online' && (
+          <div className={styles.field}>
+            <label className={styles.label}>
+              <span className={styles.mark} data-mark="X">X</span> 玩家名稱
+            </label>
+            <input
+              className={styles.input}
+              value={name1}
+              onChange={e => setName1(e.target.value)}
+              placeholder="Player 1"
               maxLength={20}
             />
           </div>

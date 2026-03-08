@@ -4,3 +4,28 @@
   align-items: center;
   gap: 1rem;
 }
+
+.disconnectBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(233,69,96,0.15);
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.disconnectBtn {
+  background: var(--color-primary);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
