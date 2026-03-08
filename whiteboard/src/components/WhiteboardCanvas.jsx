@@ -44,6 +44,7 @@ export default function WhiteboardCanvas({
 
     if (activeTool === 'pan') {
       lastPanRef.current = { x: e.clientX, y: e.clientY }
+      drawingRef.current = { tool: 'pan' }
       return
     }
 
@@ -92,9 +93,9 @@ export default function WhiteboardCanvas({
 
   const handlePointerMove = useCallback((e) => {
     const d = drawingRef.current
-    if (!d) return
+    if (!d && !lastPanRef.current) return
 
-    if (d.tool === 'pan' || (spaceDownRef.current && lastPanRef.current)) {
+    if (d?.tool === 'pan' || (spaceDownRef.current && lastPanRef.current)) {
       const ref = lastPanRef.current
       if (!ref) return
       const dx = e.clientX - ref.x
@@ -163,7 +164,7 @@ export default function WhiteboardCanvas({
       return
     }
 
-    if (d.tool === 'pan' || lastPanRef.current) {
+    if (d.tool === 'pan') {
       lastPanRef.current = null
       drawingRef.current = null
       return
