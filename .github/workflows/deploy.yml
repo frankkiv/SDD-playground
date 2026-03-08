@@ -49,6 +49,7 @@ jobs:
           name_map = {
               'tic-tac-toe': '九宮格大戰',
               'gomoku': '五子棋',
+              'whiteboard': '電子白板',
           }
           cards = ''
           for name in sorted(os.listdir('_site')):

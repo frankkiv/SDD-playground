@@ -1,0 +1,49 @@
+.whiteboardScreen {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.backBtn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--color-surface);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.backBtn:hover {
+  color: var(--color-text);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(22,33,62,0.95);
+}
+
+.disconnectBanner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(233,69,96,0.9);
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(233,69,96,0.4);
+}

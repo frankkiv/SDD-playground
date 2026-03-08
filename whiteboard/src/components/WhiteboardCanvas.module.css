@@ -1,0 +1,28 @@
+.container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #222;
+}
+
+.canvasWrapper {
+  position: relative;
+  will-change: transform;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.textInput {
+  position: absolute;
+  background: transparent;
+  border: 1px dashed rgba(255,255,255,0.4);
+  outline: none;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-width: 100px;
+  padding: 2px 4px;
+}

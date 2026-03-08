@@ -1,0 +1,109 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.homeLink {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  transition: all 0.2s;
+}
+.homeLink:hover {
+  color: var(--color-text);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 360px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.desc {
+  color: var(--color-muted);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.primaryBtn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-primary), #ff6b6b);
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(233,69,96,0.4);
+}
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233,69,96,0.6);
+}
+.primaryBtn:active {
+  transform: translateY(0);
+}
+
+.divider {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.secondaryBtn {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--color-secondary);
+  border-radius: 10px;
+  padding: 0.8rem;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.secondaryBtn:hover {
+  border-color: var(--color-accent);
+  background: rgba(78,205,196,0.08);
+}
+
+.hint {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
