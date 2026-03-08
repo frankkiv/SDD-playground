@@ -3,17 +3,29 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  width: 100%;
+  max-width: 420px;
 }
 
 .homeLink {
   align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--color-muted);
   text-decoration: none;
   font-size: 0.85rem;
-  transition: color 0.2s;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  transition: all 0.2s;
 }
 .homeLink:hover {
   color: var(--color-text);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
 }
 
 .title {

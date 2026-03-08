@@ -2,22 +2,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 420px;
 }
 
 .backBtn {
   align-self: flex-start;
-  background: transparent;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
   color: var(--color-muted);
   font-size: 0.85rem;
+  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  padding: 0.25rem 0;
-  transition: color 0.2s;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.2s;
 }
 .backBtn:hover {
   color: var(--color-text);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
 }
 
 .disconnectBanner {
